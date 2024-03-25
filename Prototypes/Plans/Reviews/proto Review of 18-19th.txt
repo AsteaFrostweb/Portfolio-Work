@@ -1,0 +1,3 @@
+----LEFT TO DO----
+> crashing nullifies score and imlpement no-drift after crash for exclusiontime
+> timer for map
