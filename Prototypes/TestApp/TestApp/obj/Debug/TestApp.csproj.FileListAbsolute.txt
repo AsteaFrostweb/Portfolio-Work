@@ -26,3 +26,31 @@ C:\Users\morga\Desktop\Portfolio-Work\Prototypes\Highscores Web App\TestApp\Test
 C:\Users\morga\Desktop\Portfolio-Work\Prototypes\Highscores Web App\TestApp\TestApp\obj\Debug\TestApp.csproj.Up2Date
 C:\Users\morga\Desktop\Portfolio-Work\Prototypes\Highscores Web App\TestApp\TestApp\bin\Debug\Newtonsoft.Json.dll
 C:\Users\morga\Desktop\Portfolio-Work\Prototypes\Highscores Web App\TestApp\TestApp\bin\Debug\Newtonsoft.Json.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\TestApp.exe.config
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\TestApp.exe
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\TestApp.pdb
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Buffers.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Memory.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Text.Json.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.ValueTuple.dll
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\Newtonsoft.Json.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Buffers.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Memory.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Text.Encodings.Web.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Text.Json.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\bin\Debug\System.ValueTuple.xml
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\obj\Debug\TestApp.csproj.AssemblyReference.cache
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\obj\Debug\TestApp.csproj.CoreCompileInputs.cache
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\obj\Debug\TestApp.csproj.Up2Date
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\obj\Debug\TestApp.exe
+C:\Users\morga\Desktop\Portfolio-Work\Prototypes\TestApp\TestApp\obj\Debug\TestApp.pdb

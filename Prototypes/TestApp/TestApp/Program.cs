@@ -1,23 +1,27 @@
 ﻿using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static TestApp.HighScores;
 
 namespace TestApp
 {
 
     class NetworkManager
     {
-        private string baseUri = "https://localhost";
-        private string Port = "7093";
-        private string Username = "serina@groenewald.com";
-        private string Password = "Iona001!";
+        private string baseUri = "";
+        private string Port = "";
+        private string Username = "";
+        private string Password = "";
         public string UriString { get { return baseUri + ":" + Port; } }
 
         private HttpClientHandler httpClientHandler;
@@ -27,7 +31,17 @@ namespace TestApp
             httpClientHandler = new HttpClientHandler();
             httpClient = new HttpClient(httpClientHandler);
         }
+        public NetworkManager(string _baseUri, string _Port)
+        {
+            httpClientHandler = new HttpClientHandler();
+            httpClient = new HttpClient(httpClientHandler);
+            baseUri = _baseUri;
+            Port = _Port;
+        }
 
+
+
+        //Gets a verification token from login page and then attempts to login with username and password from networkManager
         public async Task<bool> Login()
         {
             string verificationToken = await GetVerificationToken();
@@ -35,6 +49,7 @@ namespace TestApp
             {
                 return false;
             }
+
             FormUrlEncodedContent LoginData = GetLoginContent(verificationToken, Username, Password);
 
             // Send POST request with form data
@@ -49,6 +64,30 @@ namespace TestApp
                 return false;
             }
         }
+        //Gets a verification token from login page and then attempts to login with username and password specified
+        public async Task<bool> Login(string _username, string _password)
+        {
+            string verificationToken = await GetVerificationToken();
+            if (verificationToken == "")
+            {
+                return false;
+            }
+
+            FormUrlEncodedContent LoginData = GetLoginContent(verificationToken, _username, _password);
+
+            // Send POST request with form data
+            HttpResponseMessage response = await httpClient.PostAsync($"{UriString}/Identity/Account/Login", LoginData);
+            string content = await response.Content.ReadAsStringAsync();
+            if (!content.Contains("Invalid login attempt."))
+            {                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         private FormUrlEncodedContent GetLoginContent(string verificationToken, string username, string password) 
         {
@@ -60,6 +99,7 @@ namespace TestApp
                 new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken)
             });
         }
+
         private async Task<string> GetVerificationToken() 
         {
             // Send GET request to retrieve the login page
@@ -93,15 +133,51 @@ namespace TestApp
             }
         }
 
+        public async Task<bool> PostHighScore(string mapName, float fastestLap, int bestComboScore, float bestComboTime)
+        {
+            // Create the form data
+            var formData = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("MapName", mapName),
+                new KeyValuePair<string, string>("FastestLap", fastestLap.ToString()),
+                new KeyValuePair<string, string>("BestComboScore", bestComboScore.ToString()),
+                new KeyValuePair<string, string>("BestComboTime", bestComboTime.ToString())
+            };
+
+            // Create FormUrlEncodedContent
+            var content = new FormUrlEncodedContent(formData);
+
+            // Send POST request to the UpdateHighScore endpoint
+            HttpResponseMessage response = await httpClient.PostAsync($"{UriString}/Highscores/UpdateHighScore", content);
+
+            Console.WriteLine("Status Code: " + response.StatusCode.ToString());
+
+            // Check if the response is successful
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<Highscore>> GetHighscores(string MapName) 
+        {
+            List<Highscore> highscores = new List<Highscore>();
+
+            // Send POST request to the UpdateHighScore endpoint
+            HttpResponseMessage response = await httpClient.GetAsync($"{UriString}/Highscores/GetHighscores?MapName=" + MapName);
+
+            string json = await response.Content.ReadAsStringAsync();
+
+            highscores = HighScores.ParseHighscores(json);
+
+            return highscores;
+        }
     }
 
-   
-    class HighScores 
+  
+    public class HighscoreUpdateModel
     {
-        enum Sort_Order { DESC, ASC}
-        enum Sort_By {NAME, FASTEST_LAP }
-        List<Highscore> highscores;
-
+        public string MapName { get; set; }
+        public float FastestLap { get; set; }
+        public int BestComboScore { get; set; }
+        public float BestComboTime { get; set; }
     }
 
     public class Highscore
@@ -114,129 +190,86 @@ namespace TestApp
 
         public override string ToString()
         {
-            return "Name:" + Name + ", Map:" + Map + ", Fastest Lap:" + Fastest_Lap + ", Best Combo Score:" + Best_Combo_Score + ", Best Combo Time:" + Best_Combo_Time; 
+            return "Name:" + Name + ", Map:" + Map + ", Fastest Lap:" + Fastest_Lap + ", Best Combo Score:" + Best_Combo_Score + ", Best Combo Time:" + Best_Combo_Time;
         }
+
+        public TimeSpan BestComboTimeSpan() 
+        {
+           return TimeSpan.ParseExact(Best_Combo_Time, @"hh\:mm\:ss\:fff", CultureInfo.InvariantCulture);
+        }
+        public TimeSpan FastestLapTimeSpan()
+        {
+            return TimeSpan.ParseExact(Fastest_Lap, @"hh\:mm\:ss\:fff", CultureInfo.InvariantCulture);
+        }        
+
     }
 
-    public class HighscoreParser
+    public class HighScores 
     {
+        enum Sort_Order { DESC, ASC}
+        enum Sort_By {NAME, FASTEST_LAP }
+
+        List<Highscore> highscores;
+
+
+
         public static List<Highscore> ParseHighscores(string text)
         {
-            List<Highscore> highscores = new List<Highscore>();
+            List<Highscore> highscores;
 
-            // Define the regex pattern to match key-value pairs
-            string pattern = @"\{Name:(?<name>.*?),Map:(?<map>.*?),Fastest_Lap:(?<fastestLap>.*?),BestComboScore:(?<bestComboScore>.*?),Best_Combo_Time:(?<bestComboTime>.*?)\}";
-
-            // Use Regex to find all matches of the pattern in the input text
-            MatchCollection matches = Regex.Matches(text, pattern);
-
-            // Iterate through each match and create a Highscore object
-            foreach (Match match in matches)
+            try
             {
-                Highscore highscore = new Highscore
-                {
-                    Name = match.Groups["name"].Value,
-                    Map = match.Groups["map"].Value,
-                    Fastest_Lap = match.Groups["fastestLap"].Value,
-                    Best_Combo_Score = int.Parse(match.Groups["bestComboScore"].Value),
-                    Best_Combo_Time = match.Groups["bestComboTime"].Value
-                };
-
-                highscores.Add(highscore);
+                // Deserialize the JSON string into a list of Highscore objects
+                highscores = JsonConvert.DeserializeObject<List<Highscore>>(text);
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that may occur during deserialization
+                Console.WriteLine("Error parsing highscores: " + ex.Message);
+                highscores = new List<Highscore>(); // Return an empty list if parsing fails
             }
 
             return highscores;
         }
+
     }
+
+   
+
 
     class Program
     {
+        private static string baseUri = "https://localhost";
+        private static string Port = "7093";
+        private static string Username = "iona@mulholland.com";
+        private static string Password = "Iona001!";
         static async Task Main(string[] args)
         {
-            string baseUrl = "https://localhost:7093"; // Replace with your website URL
-
-            var httpClientHandler = new HttpClientHandler();
-            var httpClient = new HttpClient(httpClientHandler);
-
-            // Send GET request to retrieve the login page
-            var loginPageResponse = await httpClient.GetAsync($"{baseUrl}/Identity/Account/Login");
-            loginPageResponse.EnsureSuccessStatusCode(); // Throw an exception if the response is not successful
-            string loginPageContent = await loginPageResponse.Content.ReadAsStringAsync();
-
-            // Extract the verification token from the login page content
-            string verificationToken = ExtractVerificationToken(loginPageContent);
-            Console.WriteLine("Verification Token: " + verificationToken + "\n");
-
-            // Prepare the form data
-            var formData = new FormUrlEncodedContent(new[]
+            NetworkManager networkManager = new NetworkManager(baseUri, Port);
+            if (await networkManager.Login(Username, Password) == true)
             {
-                new KeyValuePair<string, string>("Input.Email", "serina@groenewald.com"),
-                new KeyValuePair<string, string>("Input.Password", "Iona001!"),
-                new KeyValuePair<string, string>("Input.RememberMe", "true"),
-                new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken)
-            });
-           // Console.WriteLine("before Login:" + httpClient.DefaultRequestHeaders.Authorization.ToString());
-            // Send POST request with form data
-            var response = await httpClient.PostAsync($"{baseUrl}/Identity/Account/Login", formData);
+                Console.WriteLine("login Succesful");
 
-            if (response.IsSuccessStatusCode)
-            {
-                // Extract cookies from the response headers        
-                foreach (Cookie cookie in httpClientHandler.CookieContainer.GetCookies(new Uri(baseUrl)))
+                if (await networkManager.PostHighScore("Carteena Valley", 18.0f, 18000, 15f))
                 {
-                    Console.WriteLine("Cookie Name: " + cookie.Name); 
-                    Console.WriteLine("Cookie value: " + cookie.Value);
-                    Console.WriteLine("Cookie Comment: " + cookie.Comment + "\n");
+                    Console.WriteLine("Highscore posted");
+                }
+                else 
+                {
+                    Console.WriteLine("Error posting highscore");
                 }
 
-               
-             
-
-                Console.WriteLine("Login successful!");
-                var repondcontent = await response.Content.ReadAsStringAsync();
-                //Console.WriteLine(repondcontent);
-
-
-                var managePageResponse = await httpClient.GetAsync($"{baseUrl}/Highscores");
-
-                repondcontent = await managePageResponse.Content.ReadAsStringAsync();
-
-                
-                foreach (Highscore h in HighscoreParser.ParseHighscores(repondcontent)) 
+                foreach (Highscore h in await networkManager.GetHighscores("Sandy Slalom")) 
                 {
                     Console.WriteLine(h.ToString());
                 }
-               // Console.WriteLine(repondcontent);
+                
             }
-            else
+            else 
             {
-                var repondcontent = await response.Content.ReadAsStringAsync();
-                //Console.WriteLine(repondcontent);
-                Console.WriteLine("Login failed. " + response.ReasonPhrase);
+                Console.WriteLine("Login failed");
             }
-
-            Console.ReadLine();
-        }
-
-        static string ExtractVerificationToken(string htmlContent)
-        {
-            // Define the regular expression pattern to match the verification token
-            string pattern = "<input[^>]+name=\"__RequestVerificationToken\"[^>]+value=\"([^\"]+)\"[^>]*>";
-
-            // Use Regex.Match to find the first match of the pattern in the HTML content
-            Match match = Regex.Match(htmlContent, pattern);
-
-            // Check if a match is found
-            if (match.Success)
-            {
-                // Extract the value of the verification token from the matched group
-                return match.Groups[1].Value;
-            }
-            else
-            {
-                // If no match is found, return null or throw an exception
-                throw new Exception("Verification token not found.");
-            }
+            Console.Read();
         }
     }
 }
