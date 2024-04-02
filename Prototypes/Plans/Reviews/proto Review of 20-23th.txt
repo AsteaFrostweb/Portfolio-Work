@@ -1,5 +1,0 @@
-----LEFT TO DO----
-> Maybe add "Best Lap Time" timer somewhere
-> Sound FX like car revs, drift, starthorn, race finish sfx, menu button press
-> More maps to quality of "Sandy Slalom" as thats only really playable map atm
-> Bug Fixes: (No lap_count slider showing on map choise menu in build, TOtal combo time was greater than the total lap time when racing in build)

@@ -1,0 +1,49 @@
+﻿@model Highscores_WebApp.Models.HighscoresViewModel
+
+@foreach (MapsModel MapModel in Model.Maps)
+{
+    <h2>@MapModel.Name</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Player
+                </th>
+                <th>
+                    Track
+                </th>
+                <th>
+                    Fastest Lap<a href="?sortOrder=FastestLap_ASC">@Html.Raw("&#x25B2;")</a> | <a href="?sortOrder=FastestLap_DESC">@Html.Raw("&#x25BC;")</a>
+                </th>
+                <th>
+                    Best Combo Score<a href="?sortOrder=BestComboScore_ASC">@Html.Raw("&#x25B2;")</a> | <a href="?sortOrder=BestComboScore_DESC">@Html.Raw("&#x25BC;")</a>
+                </th>
+                <th>
+                    Best Combo Time<a href="?sortOrder=BestComboTime_ASC">@Html.Raw("&#x25B2;")</a> | <a href="?sortOrder=BestComboTime_DESC">@Html.Raw("&#x25BC;")</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+                foreach (var highscore in Model.Highscores)
+                {
+                    
+                    if(highscore.Map_Id == MapModel.Id)
+                    {
+                        <tr>
+                            <td>@(Model.Users.FirstOrDefault(u => u.Id == highscore.Player_Id)?.UserName)</td>
+                            <td>@(Model.Maps.FirstOrDefault(m => m.Id == highscore.Map_Id)?.Name)</td>
+                            <td>@TimeSpan.FromSeconds(highscore.Fastest_Lap).ToString(@"hh\:mm\:ss\:fff")</td>
+                            <td>@highscore.Best_Combo_Score</td>
+                            <td>@TimeSpan.FromSeconds(highscore.Best_Combo_Time).ToString(@"hh\:mm\:ss\:fff")</td>
+                            <div class="d-none">
+                                {Name:@(Model.Users.FirstOrDefault(u => u.Id == highscore.Player_Id)?.UserName),Map:@(Model.Maps.FirstOrDefault(m => m.Id == highscore.Map_Id)?.Name),Fastest_Lap:@TimeSpan.FromSeconds(highscore.Fastest_Lap).ToString(@"hh\:mm\:ss\:fff"),BestComboScore:@highscore.Best_Combo_Score,Best_Combo_Time:@TimeSpan.FromSeconds(highscore.Best_Combo_Time).ToString(@"hh\:mm\:ss\:fff")}
+                            </div>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+}

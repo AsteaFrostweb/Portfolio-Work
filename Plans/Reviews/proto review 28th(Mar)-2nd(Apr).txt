@@ -1,0 +1,23 @@
+---ACHIEVED---
+> Set up MVC web application to handle highscores and login/user creation with SQL server
+
+> Created test application to login from c# httpClient and request highscores.
+> Implemented parsing of highscores page into highscores objects.
+> Refactoring to make it more easily portable to unity.
+
+----LEFT TO DO----
+> Post to highscores from test application to highscores page
+> Create Login UI from unity game to sign into the website through httpClient
+> Create highscores UI in the game to display at the end of the run.
+> Handle posting of Highscores to webApp from the UNity game if the current highscore is better than the previous highscore
+> Create Login UI from unity game to sign into the website through httpClient
+
+> Bug Fixes: (NONE)
+
+> QOL update options: 
+(
+ Handle email verification properly,
+ Highscores sorting,
+ higshcored page should only show top 200 highscores,
+ highscores page have different views for maps IE.(/Highscores/SandySlalom) would show sandy slalom highscores only
+)

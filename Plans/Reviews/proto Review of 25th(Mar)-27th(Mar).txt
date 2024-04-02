@@ -1,0 +1,11 @@
+---ACHIEVED---
+> Learnt about ASP .NET Core 8 framework.
+> Created simple test app with signin and "movie categories" model to get more familliar with MVC
+
+----LEFT TO DO----
+> Set up MVC web application to handle highscores and login/user creation.
+	
+	
+As this is the last thing to do before polishing the game I see no way to move on without this being done.
+I will continue with this until the end of the month or until finished and will then move onto the polishing.
+
