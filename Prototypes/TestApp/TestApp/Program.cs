@@ -241,8 +241,8 @@ namespace TestApp
     {
         private static string baseUri = "https://localhost";
         private static string Port = "7093";
-        private static string Username = "iona@mulholland.com";
-        private static string Password = "Iona001!";
+        private static string Username = "bill@teach.com";
+        private static string Password = "Password001!";
         static async Task Main(string[] args)
         {
             NetworkManager networkManager = new NetworkManager(baseUri, Port);
@@ -250,7 +250,11 @@ namespace TestApp
             {
                 Console.WriteLine("login Succesful");
 
-                if (await networkManager.PostHighScore("Carteena Valley", 18.0f, 18000, 15f))
+                if (await networkManager.PostHighScore("Sandy Slalom", 32.040f, 1481, 30.54f))
+                {
+                    Console.WriteLine("Highscore posted");
+                }
+                if (await networkManager.PostHighScore("Carteena Valley", 25.040f, 11681, 73.4f))
                 {
                     Console.WriteLine("Highscore posted");
                 }
